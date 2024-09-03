@@ -82,106 +82,113 @@ export default function Home() {
           Your Digital Gateway to Book Discovery
         </h1>
 
-        <form onSubmit={handleSearch} className="flex items-center gap-2">
-          <Input
-            placeholder="Search for a book"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          {search.length > 0 && (
+        <form
+          onSubmit={handleSearch}
+          className="flex flex-col gap-2 sm:flex-row"
+        >
+          <div className="flex flex-1 gap-2">
+            <Input
+              placeholder="Search for a book"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search.length > 0 && (
+              <div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      onClick={() => {
+                        setFilteredBooks(books);
+                        setSearch("");
+                      }}
+                    >
+                      <X className="size-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Clear search</TooltipContent>
+                </Tooltip>
+              </div>
+            )}
+            <Button type="submit">
+              <Search className="mr-1.5 size-4" />
+              Search
+            </Button>
+          </div>
+          <div className="flex justify-end gap-2">
             <div>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    type="button"
-                    onClick={() => {
-                      setFilteredBooks(books);
-                      setSearch("");
-                    }}
-                  >
-                    <X className="size-4" />
+                  <Button variant="outline" size="icon" onClick={handleSort}>
+                    {sortBy === "asc" ? (
+                      <ArrowDownAZ className="size-4" />
+                    ) : (
+                      <ArrowUpAZ className="size-4" />
+                    )}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Clear search</TooltipContent>
+                <TooltipContent>Sort by name</TooltipContent>
               </Tooltip>
             </div>
-          )}
-          <Button type="submit">
-            <Search className="mr-1.5 size-4" />
-            Search
-          </Button>
-          <div>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handleSort}>
-                  {sortBy === "asc" ? (
-                    <ArrowDownAZ className="size-4" />
-                  ) : (
-                    <ArrowUpAZ className="size-4" />
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Sort by name</TooltipContent>
-            </Tooltip>
-          </div>
-          <div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <Filter className="mr-1.5 size-4" />
-                  Filter
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel className="space-y-2">
-                  <span>Filter by genre</span>
-                  <div className="flex gap-1">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => {
-                        setFilters(uniqueGenres);
-                        setFilteredBooks(books);
-                      }}
-                      disabled={filters.length === uniqueGenres.length}
-                    >
-                      Select All
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => {
-                        setFilters([]);
-                        setFilteredBooks([]);
-                      }}
-                      disabled={filters.length === 0}
-                    >
-                      Clear All
-                    </Button>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <ScrollArea className="h-96">
-                  {uniqueGenres.map((genre) => (
-                    <DropdownMenuCheckboxItem
-                      key={genre}
-                      checked={filters.includes(genre)}
-                      onCheckedChange={(checked) => {
-                        const newFilters = checked
-                          ? [...filters, genre]
-                          : filters.filter((filter) => filter !== genre);
-                        setFilters(newFilters);
-                        applyFilters(newFilters);
-                      }}
-                    >
-                      {genre}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-                </ScrollArea>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">
+                    <Filter className="mr-1.5 size-4" />
+                    Filter
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel className="space-y-2">
+                    <span>Filter by genre</span>
+                    <div className="flex gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setFilters(uniqueGenres);
+                          setFilteredBooks(books);
+                        }}
+                        disabled={filters.length === uniqueGenres.length}
+                      >
+                        Select All
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setFilters([]);
+                          setFilteredBooks([]);
+                        }}
+                        disabled={filters.length === 0}
+                      >
+                        Clear All
+                      </Button>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <ScrollArea className="h-96">
+                    {uniqueGenres.map((genre) => (
+                      <DropdownMenuCheckboxItem
+                        key={genre}
+                        checked={filters.includes(genre)}
+                        onCheckedChange={(checked) => {
+                          const newFilters = checked
+                            ? [...filters, genre]
+                            : filters.filter((filter) => filter !== genre);
+                          setFilters(newFilters);
+                          applyFilters(newFilters);
+                        }}
+                      >
+                        {genre}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </ScrollArea>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </form>
 
